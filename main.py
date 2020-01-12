@@ -7,7 +7,7 @@ from transformers import BertModel, BertConfig, BertTokenizer
 from flask import Flask, request, jsonify
 
 
-app = Flask(__name__)
+flask_app = Flask(__name__)
 
 
 # model_dir = 'C:/Users/ddale/Downloads/NLP/rubert_deeppavlov/rubert_cased_L-12_H-768_A-12_v2'
@@ -46,14 +46,14 @@ def bert_cos(w1, w2, cls=False):
     return np.dot(e1, e2) / np.sqrt(np.dot(e1, e1) * np.dot(e2, e2))
 
 
-@app.route('/', methods=['POST', 'GET'])
+@flask_app.route('/', methods=['POST', 'GET'])
 def main_api(text='привет'):
     if request.json:
         text = request.json['text']
     return jsonify({'text': text, 'result': bert_emb_pool(text).tolist()})
 
 
-@app.route('/<word>', methods=['GET'])
+@flask_app.route('/<word>', methods=['GET'])
 def main_api_word(word='привет'):
     return main_api(text=word)
 
@@ -61,4 +61,4 @@ def main_api_word(word='привет'):
 if __name__ == '__main__':
     host = "0.0.0.0"
     port = int(os.environ.get('PORT', 5000))
-    app.run(host=host, port=port)
+    flask_app.run(host=host, port=port)
